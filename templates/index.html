@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weather UI</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+            margin: 24px;
+        }
+
+        .card {
+            max-width: 520px;
+            padding: 18px;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #f6f6f6;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+        }
+
+        .muted {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .big {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 12px 0 6px;
+        }
+
+        pre {
+            background: #f7f7f7;
+            padding: 12px;
+            border-radius: 10px;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="row" style="justify-content:space-between;">
+            <h1 style="margin:0;font-size:18px;">天気UI（神奈川 140010）</h1>
+            <span id="cacheBadge" class="badge">--</span>
+        </div>
+
+        <div id="weather" class="big">読み込み中…</div>
+        <div id="updated" class="muted"></div>
+
+        <div class="row" style="margin-top:14px;">
+            <button onclick="loadWeather()">更新</button>
+            <button onclick="hardRefresh()">キャッシュ無視で更新</button>
+        </div>
+
+        <details style="margin-top:14px;">
+            <summary>レスポンスJSON</summary>
+            <pre id="raw">{}</pre>
+        </details>
+    </div>
+
+    <script>
+        async function fetchWeather(noCache = false) {
+            const url = noCache ? "/api/weather?no_cache=1" : "/api/weather";
+            const res = await fetch(url, { headers: { "Accept": "application/json" } });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        }
+
+        function render(data) {
+            document.getElementById("weather").textContent = data.weather ?? "??";
+            document.getElementById("cacheBadge").textContent = data.from_cache ? "cache ✅" : "fresh 🌤️";
+            document.getElementById("updated").textContent = `updated: ${new Date().toLocaleString()}`;
+            document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function loadWeather() {
+            try {
+                const data = await fetchWeather(false);
+                render(data);
+            } catch (e) {
+                document.getElementById("weather").textContent = "取得失敗😇";
+                document.getElementById("raw").textContent = String(e);
+            }
+        }
+
+        async function hardRefresh() {
+            try {
+                const data = await fetchWeather(true);
+                render(data);
+            } catch (e) {
+                document.getElementById("weather").textContent = "取得失敗😇";
+                document.getElementById("raw").textContent = String(e);
+            }
+        }
+
+        loadWeather();
+    </script>
+</body>
+
+</html>
