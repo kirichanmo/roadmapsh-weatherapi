@@ -1,6 +1,7 @@
-# WeatherAPI
-
 神奈川県（都市コード: 140010）の天気予報を取得・表示するFastAPI製Webアプリケーション。
+
+## アプリURL
+https://roadmapsh-weatherapi.onrender.com/
 
 ## 機能
 
@@ -75,7 +76,3 @@ http://localhost:8000 でアクセス可能。
 ├── pyproject.toml       # 依存関係定義
 └── .env                 # 環境変数（gitignore対象）
 ```
-
-## ライセンス
-
-MIT
