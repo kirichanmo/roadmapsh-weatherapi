@@ -1,6 +1,12 @@
+# WeatherAPI
+
 神奈川県（都市コード: 140010）の天気予報を取得・表示するFastAPI製Webアプリケーション。
 
-## アプリURL
+## ProjectURL
+本コードは、roadmap.shの青果物です。
+https://roadmap.sh/projects/weather-api-wrapper-service
+
+## AppURL
 https://roadmapsh-weatherapi.onrender.com/
 
 ## 機能
